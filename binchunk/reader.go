@@ -53,31 +53,6 @@ func (r *reader) readString() string {
 	return string(bytes)
 }
 
-func (r *reader) checkHeader() {
-	if string(r.readBytes(4)) != LUA_SIGNATURE {
-		panic("not a precompiled chunk!")
-	} else if r.readByte() != LUAC_VERSION {
-		panic("version mismatch!")
-	} else if r.readByte() != LUAC_FORMAT {
-		panic("format mismatch!")
-	} else if string(r.readBytes(6)) != LUAC_DATA {
-		panic("corrupted!")
-	} else if r.readByte() != CINT_SIZE {
-		panic("int size mismatch!")
-	} else if r.readByte() != CSIZET_SIZE {
-		panic("size_t size mismatch!")
-	} else if r.readByte() != INSTRUCTION_SIZE {
-		panic("instruction size mismatch!")
-	} else if r.readByte() != LUA_INTEGER_SIZE {
-		panic("lua_Integer size mismatch!")
-	} else if r.readByte() != LUA_NUMBER_SIZE {
-		panic("lua_Number size mismatch!")
-	} else if r.readLuaInterger() != LUAC_INT {
-		panic("endianness mismatch!")
-	} else if r.readLuaNumber() != LUAC_NUM {
-		panic("float format mismatch!")
-	}
-}
 func (r *reader) readCode() []uint32 {
 	code := make([]uint32, r.readUint32())
 	for i := range code {
@@ -173,5 +148,31 @@ func (r *reader) readProto(parentSource string) *Prototype {
 		LineInfo:        r.readLineInfo(),
 		LocVars:         r.readLocVars(),
 		UpvalueNames:    r.readUpvalueNames(),
+	}
+}
+
+func (r *reader) checkHeader() {
+	if string(r.readBytes(4)) != LUA_SIGNATURE {
+		panic("not a precompiled chunk!")
+	} else if r.readByte() != LUAC_VERSION {
+		panic("version mismatch!")
+	} else if r.readByte() != LUAC_FORMAT {
+		panic("format mismatch!")
+	} else if string(r.readBytes(6)) != LUAC_DATA {
+		panic("corrupted!")
+	} else if r.readByte() != CINT_SIZE {
+		panic("int size mismatch!")
+	} else if r.readByte() != CSIZET_SIZE {
+		panic("size_t size mismatch!")
+	} else if r.readByte() != INSTRUCTION_SIZE {
+		panic("instruction size mismatch!")
+	} else if r.readByte() != LUA_INTEGER_SIZE {
+		panic("lua_Integer size mismatch!")
+	} else if r.readByte() != LUA_NUMBER_SIZE {
+		panic("lua_Number size mismatch!")
+	} else if r.readLuaInterger() != LUAC_INT {
+		panic("endianness mismatch!")
+	} else if r.readLuaNumber() != LUAC_NUM {
+		panic("float format mismatch!")
 	}
 }
